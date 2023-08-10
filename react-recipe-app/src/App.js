@@ -8,6 +8,9 @@ const App = () => {
   const APP_KEY = "c3b3d11b02060c2f721fc6755fd9c7a5";
 
   const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState('');
+
+
 // empty array in useeffect means that the fetchData function will only be called on initial render and not on subsequent renders when the data set changes
   useEffect(() => {
     getRecipes();
@@ -17,18 +20,27 @@ const App = () => {
     const response = await fetch(`https://api.edamam.com/search?q=chicken&app_id=${APP_ID}&app_key=${APP_KEY}`);
     const data = await response.json();
     setRecipes(data.hits);
+    console.log(data.hits)
+  };
+
+  const updateSearch = e => {
+    setSearch(e.target.value)
   }
 
 
   return (
     <div className= "App">
       <form className="search-form">
-        <input className="search-bar" type="text" />
+        <input className="search-bar" type="text" value={search} onChange={updateSearch} />
         <button className="search-button" type="submit">Search</button>
       </form>
       {recipes.map(recipe => (
-        <Recipe title={recipe.recipe.label} calories={recipe.recipe.calories}
-        image={recipe.recipe.image}/>
+        <Recipe
+          key={recipe.recipe.label}
+          title={recipe.recipe.label}
+          calories={recipe.recipe.calories}
+          image={recipe.recipe.image}
+          />
       ))}
     </div>
   );
